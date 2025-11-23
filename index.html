@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Адміністрація ARKIP RP</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #000000, #0d0d0d);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #4cc9f0;
+      text-shadow: 0 0 15px #4cc9f0;
+    }
+
+    .btn {
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      background: #0d0d0d;
+      color: white;
+      transition: 0.3s;
+      animation: glow 3s infinite alternate;
+    }
+
+    .btn:hover {
+      background: #4cc9f0;
+      box-shadow: 0 0 15px #4cc9f0;
+      transform: scale(1.05);
+    }
+
+    /* Modal */
+    .modal-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal {
+      background: #162039;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 25px #4cc9f0;
+      width: 350px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal h2 {
+      margin-bottom: 15px;
+      color: #4cc9f0;
+    }
+
+    .modal button, .modal a {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      background: #0d0d0d;
+      color: white;
+      text-decoration: none;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      transition: 0.3s;
+      animation: glow 3s infinite alternate;
+    }
+
+    .modal button:hover, .modal a:hover {
+      background: #4cc9f0;
+      box-shadow: 0 0 15px #4cc9f0;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes glow {
+      0% { box-shadow: 0 0 10px #ff0000; }
+      25% { box-shadow: 0 0 10px #00ff00; }
+      50% { box-shadow: 0 0 10px #0000ff; }
+      75% { box-shadow: 0 0 10px #ff00ff; }
+      100% { box-shadow: 0 0 10px #00ffff; }
+    }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Адміністрація ARKIP RP</h1>
+    <button class="btn" onclick="openModal()">Щотижнева норма</button>
+  </div>
+
+  <div class="modal-bg" id="modalBg">
+    <div class="modal">
+      <h2>Вітаю шановний адміністратор</h2>
+      <p>Виберіть кнопку яку вам треба:</p>
+      <p style="margin-top:10px; color:#ff4444; font-weight:bold;">Подача норми має бути до суботи до 22:00. Не виконання норми — догана.</p>
+      <a href="https://1drv.ms/w/c/289775730739e364/EaFz7LxTAGNHhvqPFxWkZpMBZ88JwLa_OxKfpePbE8sL5A?e=cpKvOe" target="_blank">Переглянути щотижневу норму</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfjUg00_V6GY2YY7yxtrIe9hFB4Q9aI_B_MJ_UQrz2Mt1Sl3A/viewform?usp=sharing&ouid=105084715471178345352" target="_blank">Подача щотижневої норми</a>
+      <button onclick="closeModal()">Закрити</button>
+    </div>
+  </div>
+
+  <script>
+    function openModal() {
+      document.getElementById("modalBg").style.display = "flex";
+    }
+    function closeModal() {
+      document.getElementById("modalBg").style.display = "none";
+    }
+  </script>
+</body>
+</html>

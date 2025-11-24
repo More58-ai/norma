@@ -4,116 +4,381 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Адміністрація ARKIP RP</title>
+
   <style>
     body {
       margin: 0;
       font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #000000, #0d0d0d);
-      color: #fff;
+      background: #000;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      color: white;
+      position: relative;
     }
 
-    .container {
-      text-align: center;
+    /* ================= LOADER ================= */
+    #loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      animation: fadeOut 1s ease forwards;
+      animation-delay: 2.6s;
+    }
+
+    .loader-circle {
+      width: 80px;
+      height: 80px;
+      border: 6px solid rgba(0,255,255,0.3);
+      border-top-color: #00eaff;
+      border-radius: 50%;
+      animation: spin 1.4s linear infinite;
+      filter: drop-shadow(0 0 10px #00eaff);
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    /* floating logos */
+    .floating-logo {
+      position: absolute;
+      opacity: 0.08;
+      animation: floatRandom linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes floatRandom {
+      from { transform: translateY(110vh); }
+      to { transform: translateY(-20vh); }
+    }
+
+    /* neon lines */
+    .neon-line {
+      position: absolute;
+      width: 2px;
+      height: 130vh;
+      background: rgba(0,255,255,0.35);
+      filter: blur(2px);
+      animation: neonMove 6s linear infinite;
+      z-index: 2;
+    }
+
+    @keyframes neonMove {
+      0% { transform: translateY(-20%); opacity: 0.2; }
+      50% { opacity: 0.6; }
+      100% { transform: translateY(120%); opacity: 0.2; }
     }
 
     h1 {
       font-size: 3rem;
-      margin-bottom: 20px;
       text-transform: uppercase;
-      letter-spacing: 3px;
-      color: #4cc9f0;
       text-shadow: 0 0 15px #4cc9f0;
+      animation: fadeFromBottom 1s ease-out;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    @keyframes fadeFromBottom {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
     .btn {
-      padding: 15px 30px;
-      font-size: 1.2rem;
+      padding: 15px 35px;
+      font-size: 1.3rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 15px;
       cursor: pointer;
-      margin-top: 20px;
-      background: #0d0d0d;
+      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
       color: white;
-      transition: 0.3s;
-      animation: glow 3s infinite alternate;
+      transition: 0.4s;
+      box-shadow: 0 8px 18px rgba(0, 255, 255, 0.4),
+                  inset 0 0 25px rgba(0,255,255,0.3);
+      margin: auto;
+      display: block;
     }
 
     .btn:hover {
-      background: #4cc9f0;
-      box-shadow: 0 0 15px #4cc9f0;
       transform: scale(1.05);
+      box-shadow: 0 0 25px #00eaff;
     }
 
-    /* Modal */
+    /* modal */
     .modal-bg {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
       display: none;
       justify-content: center;
       align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
     }
 
     .modal {
-      background: #162039;
-      padding: 30px;
-      border-radius: 12px;
+      background: #101726;
+      padding: 25px;
+      border-radius: 15px;
       text-align: center;
-      box-shadow: 0 0 25px #4cc9f0;
       width: 350px;
-      animation: fadeIn 0.3s ease;
+      box-shadow: 0 0 20px #4cc9f0;
+      animation: fadeIn .3s ease;
     }
 
-    .modal h2 {
-      margin-bottom: 15px;
-      color: #4cc9f0;
+    .modal img {
+      width: 70px;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 10px #4cc9f0);
     }
 
-    .modal button, .modal a {
+    .modal a {
       display: block;
-      width: 100%;
-      margin-top: 10px;
-      padding: 10px;
-      background: #0d0d0d;
-      color: white;
+      margin: 12px 0;
+      padding: 12px;
+      border-radius: 10px;
       text-decoration: none;
+      font-size: 1.1rem;
+      color: #00eaff;
+      background: rgba(0,255,255,0.08);
+      border: 1px solid #00eaff;
+      transition: .3s;
+    }
+
+    .modal a:hover {
+      background: #00eaff;
+      color: black;
+      box-shadow: 0 0 15px #00eaff;
+    }
+
+    .modal button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      background: #ff4444;
+      border-radius: 10px;
       border: none;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      transition: 0.3s;
-      animation: glow 3s infinite alternate;
+      font-size: 1.1rem;
+      color: #fff;
+      transition: .3s;
     }
 
-    .modal button:hover, .modal a:hover {
-      background: #4cc9f0;
-      box-shadow: 0 0 15px #4cc9f0;
-      transform: scale(1.05);
+    .modal button:hover {
+      background: #ff2222;
+      box-shadow: 0 0 15px #ff4444;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    @keyframes glow {
-      0% { box-shadow: 0 0 10px #ff0000; }
-      25% { box-shadow: 0 0 10px #00ff00; }
-      50% { box-shadow: 0 0 10px #0000ff; }
-      75% { box-shadow: 0 0 10px #ff00ff; }
-      100% { box-shadow: 0 0 10px #00ffff; }
-    }
-      to { opacity: 1; transform: scale(1); }
+    /* MOBILE ADAPTATION */
+    @media (max-width: 480px) {
+      h1 { font-size: 2.2rem; }
+      .btn { font-size: 1.1rem; padding: 12px 25px; }
+      .modal { width: 90%; }
+      .modal a { font-size: 1rem; }
     }
   </style>
 </head>
+
 <body>
+<style>
+/* ====== NEW LOADER ====== */
+#loader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  overflow: hidden;
+}
+
+.loader-circle {
+  width: 90px;
+  height: 90px;
+  border: 7px solid rgba(0,255,255,0.25);
+  border-top-color: #00eaff;
+  border-radius: 50%;
+  animation: spin 2s linear forwards;
+  filter: drop-shadow(0 0 12px #00eaff);
+  z-index: 10;
+}
+
+/* 2 секунди крутиться */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(720deg); }
+}
+
+/* Хвиля */
+.loader-wave {
+  position: absolute;
+  width: 0;
+  height: 100%;
+  top: 0;
+  background: #00eaff;
+  box-shadow: 0 0 40px #00eaff;
+  z-index: 5;
+  opacity: 0;
+  transform: translateX(0);
+}
+
+/* Хвиля їде вправо */
+@keyframes waveRight {
+  0% { width: 0; opacity: 1; transform: translateX(0); }
+  50% { width: 80%; opacity: 1; }
+  100% { width: 120%; opacity: 0; transform: translateX(100%); }
+}
+
+/* Хвиля їде вліво */
+@keyframes waveLeft {
+  0% { width: 0; opacity: 1; transform: translateX(0); }
+  50% { width: 80%; opacity: 1; }
+  100% { width: 120%; opacity: 0; transform: translateX(-100%); }
+}
+
+/* Поява меню */
+body.loaded .container {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hidden menu before load */
+.container {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.8s ease;
+}
+</style>
+
+<!-- HTML Loader -->
+<div id="loader">
+  <div class="loader-circle"></div>
+  <div class="loader-wave" id="loaderWave"></div>
+</div>
+
+<style>
+/* ====== LOADER ====== */
+#loader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  overflow: hidden;
+}
+
+/* Крутячийся круг */
+.loader-circle {
+  width: 90px;
+  height: 90px;
+  border: 7px solid rgba(0,255,255,0.25);
+  border-top-color: #00eaff;
+  border-radius: 50%;
+  animation: spin 2s linear forwards;
+  filter: drop-shadow(0 0 12px #00eaff);
+  z-index: 10;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(720deg); }
+}
+
+/* ===== Дощ ===== */
+.rain {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  opacity: 0;
+}
+
+.rain span {
+  width: 2px;
+  height: 20px;
+  background: #00eaff;
+  box-shadow: 0 0 10px #00eaff;
+  animation: rainDrop 0.7s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes rainDrop {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(120vh); }
+}
+
+/* Поява меню */
+body.loaded .container {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Ховаємо меню, поки йде loader */
+.container {
+  opacity: 0;
+  transform: translateY(-40px);
+  transition: 1s ease-out;
+}
+</style>
+
+<!-- HTML Loader -->
+<div id="loader">
+  <div class="loader-circle"></div>
+
+  <!-- Дощ -->
+  <div class="rain" id="rainEffect"></div>
+</div>
+
+<script>
+/* ===== LOADER SCRIPT ===== */
+
+/* Створюємо 40 крапель дощу */
+const rainContainer = document.getElementById("rainEffect");
+for (let i = 0; i < 40; i++) {
+  const drop = document.createElement("span");
+  drop.style.animationDelay = (Math.random() * 0.8) + "s";
+  drop.style.height = (10 + Math.random() * 25) + "px";
+  drop.style.marginLeft = (5 + Math.random() * 25) + "px";
+  rainContainer.appendChild(drop);
+}
+
+/* 2 секунди крутиться круг */
+setTimeout(() => {
+  // Запускаємо дощ
+  rainContainer.style.opacity = "1";
+  rainContainer.style.top = "0";
+
+  // Після ефекту — відкриваємо меню
+  setTimeout(() => {
+    document.getElementById("loader").style.display = "none";
+    document.body.classList.add("loaded");
+  }, 1200);
+
+}, 2000);
+</script>
+
   <div class="container">
     <h1>Адміністрація ARKIP RP</h1>
     <button class="btn" onclick="openModal()">Щотижнева норма</button>
@@ -121,19 +386,54 @@
 
   <div class="modal-bg" id="modalBg">
     <div class="modal">
+      <img src="https://i.postimg.cc/Z5fP1qW2/ARKIP-RP-logo.png">
+
       <h2>Вітаю шановний адміністратор</h2>
       <p>Виберіть кнопку яку вам треба:</p>
-      <p style="margin-top:10px; color:#ff4444; font-weight:bold;">Подача норми має бути до суботи до 22:00. Не виконання норми — догана.</p>
-      <a href="https://1drv.ms/w/c/289775730739e364/EaFz7LxTAGNHhvqPFxWkZpMBZ88JwLa_OxKfpePbE8sL5A?e=cpKvOe" target="_blank">Переглянути щотижневу норму</a>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfjUg00_V6GY2YY7yxtrIe9hFB4Q9aI_B_MJ_UQrz2Mt1Sl3A/viewform?usp=sharing&ouid=105084715471178345352" target="_blank">Подача щотижневої норми</a>
+
+      <p style="color:#ff4444; font-weight: bold;">
+        Подача норми до суботи 22:00<br>
+        Невиконання — догана
+      </p>
+
+      <!-- ПОСИЛАННЯ ВСТАВЛЕНО -->
+      <a href="https://1drv.ms/w/c/289775730739e364/EaFz7LxTAGNHhvqPFxWkZpMBZ88JwLa_OxKfpePbE8sL5A?e=cpKvOe" target="_blank">
+        Переглянути щотижневу норму
+      </a>
+
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfjUg00_V6GY2YY7yxtrIe9hFB4Q9aI_B_MJ_UQrz2Mt1Sl3A/viewform?usp=sharing&ouid=105084715471178345352" target="_blank">
+        Подача щотижневої норми
+      </a>
+
       <button onclick="closeModal()">Закрити</button>
     </div>
   </div>
 
   <script>
+    const logoSrc = "https://i.postimg.cc/Z5fP1qW2/ARKIP-RP-logo.png";
+
+    for (let i = 0; i < 6; i++) {
+      let img = document.createElement("img");
+      img.src = logoSrc;
+      img.className = "floating-logo";
+      img.style.left = Math.random() * 100 + "%";
+      img.style.width = 60 + Math.random() * 120 + "px";
+      img.style.animationDuration = 10 + Math.random() * 8 + "s";
+      document.body.appendChild(img);
+    }
+
+    for (let i = 0; i < 4; i++) {
+      let line = document.createElement("div");
+      line.className = "neon-line";
+      line.style.left = Math.random() * 100 + "%";
+      line.style.animationDuration = 5 + Math.random() * 5 + "s";
+      document.body.appendChild(line);
+    }
+
     function openModal() {
       document.getElementById("modalBg").style.display = "flex";
     }
+
     function closeModal() {
       document.getElementById("modalBg").style.display = "none";
     }
